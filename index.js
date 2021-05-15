@@ -1,30 +1,30 @@
-const inquirer=require("inquirer");
-const fs=require("fs");
-const util=require("util");
+const inquirer = require("inquirer");
+const fs = require("fs");
+const util = require("util");
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const html = require("./src/htmlTemp");
 const validator = require("email-validator");
-const { waitForDebugger } = require("inspector");
 
+// Async functions
 const writeFileAsync = util.promisify(fs.writeFile);
 const appendFileAsync = util.promisify(fs.appendFile);
 
-let teamArray = [];
-let teamString = ``;
+let team_Array = [];
+let team_String = ``;
 
 console.clear();
-console.log("---------------------------------------------");
-console.log("Team Portfolio Generator")
-
-async function main(){
-    try{
+console.log("****Team Profile Generator ****")
+async function main() {
+    try {
         await prompt()
-        for(let i=0;i < teamArray.length;i++){
-            teamString=teamString+html.generateCard(teamArray[i]);
+
+        for(let i = 0; i < team_Array.length; i++) {
+            team_String = team_String + html.generateCard(team_Array[i]);
         }
-        let finalHtml=html.generateHtml(teamString);
+        let finalHtml = html.generateHtml(team_String)
+
         console.clear();
         console.log("---------------------------------------------");
         console.log("Generating index.html file....");
@@ -34,19 +34,20 @@ async function main(){
 
         console.clear();
         console.log("---------------------------------------------");
-        console.log("index.html file created successfully");
+        console.log("index.html file generated successfully");
         console.log("---------------------------------------------");
-    }catch(err) {
+
+    } catch (err) {
         return console.log(err);
     }
 }
-
-async function prompt(){
-    let responseDone="" ;
-    do{
-        try{
-            console.log("------------------------");
-            let response =await inquirer.prompt([
+//prompt questions
+async function prompt() {
+    let responseDone = "";
+    do {
+        try {
+            console.log("---------------------------------------------");
+            let response = await inquirer.prompt([
                 {
                     type: "input",
                     name: "name",
@@ -67,7 +68,7 @@ async function prompt(){
                     type: "input",
                     name: "email",
                     message: "Enter the employee's email address: ",
-                    // Validate that it is an email using email-validator
+                    // Validate an email using email-validator
                     validate: function validateEmail(name){
                         return validator.validate(name);
                     }
@@ -83,48 +84,47 @@ async function prompt(){
                     ]
                 }
             ]);
-            
-            let response2 ="" ;
-            if (response.role==="Engineer"){
-                response2=await inquirer.prompt([{
 
-                    type: "input",
-                    name: "x",
-                    message: "What is the employee's github username?:",
-                    validate: function validateName(name){
-                        return name !== '';
-                    },
-                },]);
-                const engineer= new Engineer(response.name,response.id,response.email,response2.x);
-                teamArray.push(engineer);
-            }
-            else if (response.role==="Intern"){
-                response2=await inquirer.prompt([{
-                    type: "input",
-                    name: "x",
-                    message: "What school is the employee attending?:",
-                    validate: function validateName(name){
-                        return name !== '';
-                    },
-                },]);
-                const intern= new Intern(repsone.name,response.id,response.email,response2.x);
-                teamArray.push(intern);
-            }
-            else if(response.role==="Manager"){
+            let response2 = ""
+            if (response.role === "Engineer") {
                 response2 = await inquirer.prompt([{
-                    type: "input",
-                    name: "x",
-                    message: "What is the employee's office number?:",
-                    validate: function validateName(name){
-                       return name !== '';
-                   },
-               }, ]);
+                     type: "input",
+                     name: "x",
+                     message: "What is the Engineer's github username?:",
+                     validate: function validateName(name){
+                        return name !== '';
+                    },
+                }, ]);
+                // Add to team Array
+                const engineer = new Engineer(response.name, response.id, response.email, response2.x);
+                team_Array.push(engineer);
+            }else if (response.role === "Intern") {
+                response2 = await inquirer.prompt([{
+                     type: "input",
+                     name: "x",
+                     message: "What school is the Intern attending?:",
+                     validate: function validateName(name){
+                        return name !== '';
+                    },
+                }, ]);
+                // Add to team Array
+                const intern = new Intern(response.name, response.id, response.email, response2.x);
+                team_Array.push(intern);
+            }else if (response.role === "Manager") {
+                response2 = await inquirer.prompt([{
+                     type: "input",
+                     name: "x",
+                     message: "What is the Manager's office number?:",
+                     validate: function validateName(name){
+                        return name !== '';
+                    },
+                }, ]);
 
-               
-               const manager = new Manager(response.name, response.id, response.email, response2.x);
-               teamArray.push(manager);
+                // Add to team Array
+                const manager = new Manager(response.name, response.id, response.email, response2.x);
+                team_Array.push(manager);
             }
-        }catch (err) {
+        } catch (err) {
             return console.log(err);
         }
         responseDone = await inquirer.prompt([{
@@ -136,20 +136,12 @@ async function prompt(){
                  "No"
             ]
         },]);
-    }while (responseDone.finish === "Yes");
-}
-main();
-
-
-
-
-
-
-
-
-
-
+    }  while (responseDone.finish === "Yes");
 }
 
+// Run Application
+main();        
+        
 
 
+          
