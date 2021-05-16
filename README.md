@@ -8,13 +8,10 @@ https://drive.google.com/file/d/1CGjB75fE5ZG0H2pl3T-KryPKd88hmtAF/view
 
 ## Table of contents
 - [Description](##Description)
-- [User Story](##User Story)
 - [Usage](##Usage)
-- [Acceptance Criteria](##Acceptance Criteria)
 - [Installation](##Installation)
 - [Contributors](##Contributors)
 - [Testing](##Testing)
-- [Contributing][##Contributing]
 - [Repository Link](#Repository)
 - [GitHub Info](#GitHub) 
 
@@ -63,7 +60,7 @@ node index.js
 ```md
 npm run test
 ```
-## Contributing
+## Contributors
 Poly Singh
 
 ## Snapshots of the application:
